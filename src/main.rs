@@ -1,5 +1,7 @@
 use dioxus::{logger::tracing::info, prelude::*};
+use rand::prelude::*;
 use rand::seq::SliceRandom;
+use serde::Deserialize;
 
 static CSS: Asset = asset!("/assets/main.css");
 
@@ -27,29 +29,28 @@ fn Title() -> Element {
 
 #[component]
 fn DogView() -> Element {
-    let img_src = use_hook(|| "https://eepy.ca/silly-FB9xRuikhqoP.gif");
-
     let mut new_img_src = use_signal(|| "".to_string());
 
     let album_identifier = "k4ad54";
 
     let fetch_new = move |_| async move {
-        let get_request = format!("https://eepy.ca/api/album/{album_identifier}/view");
-        let response = reqwest::get(get_request)
+        let _get_request = format!("https://eepy.ca/api/album/{album_identifier}/view");
+        let response = reqwest::get("https://eepy.ca/api/album/k4ad54/view")
             .await  
             .unwrap()
             .json::<EepyAPI>()
             .await
             .unwrap();
 
-        new_img_src.set(response.files.choose(&mut rand::thread_rng()).unwrap().to_string());
+        let image = &response.album.files.choose(&mut rand::thread_rng()).unwrap().url;
+        new_img_src.set(image.to_string());
     };
 
-    let save = move |evt| {};
+    let save = move |_evt| {};
 
     rsx! {
         div { id: "dogview",
-            img { src: "{img_src}" } 
+            img { src: "{new_img_src}" } 
         }
         div { id: "buttons",
             button { onclick: fetch_new, id: "skip", "Skip" }
@@ -61,5 +62,26 @@ fn DogView() -> Element {
 #[derive(serde::Deserialize)]
 struct EepyAPI {
     message: String,
-    files: Vec<String>
+    album: EepyAlbum
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct EepyAlbum{
+    name: String,
+    description: Option<String>,
+    is_nsfw: bool,
+    count: i32,
+    files: Vec<EepyFile>,
+    cover: String
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct EepyFile {
+    name: String,
+    url: String,
+    thumb: String,
+    preview: String,
+    uuid: String
 }
