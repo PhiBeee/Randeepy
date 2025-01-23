@@ -52,10 +52,13 @@ html, body {
 }
 
 a#heart {
-    background-color: white;
-    color: red;
-    padding: 5px;
-    border-radius: 5px;
+    background-color: black;
+    padding: 5px 15px 5px 15px;
+    border-radius: 3px;
+    font-size: 2rem;
+    font-weight: bold;
+    border: 1px solid rgb(0, 198, 230);
+    box-shadow: 0px 0px 5px 1px rgb(0, 198, 230);
 }
 
 #title span {
@@ -84,7 +87,7 @@ a#heart {
     border-radius: 3px;
     font-size: 2rem;
     font-weight: bold;
-    color: #00c6e6
+    color: rgb(0, 198, 230)
 }
 
 #navbar {
@@ -95,15 +98,6 @@ a#heart {
     justify-content: space-evenly;
     padding: 20px;
     gap: 20px;
-}
-
-#navbar a {
-    background-color: #a8a8a8;
-    border-radius: 5px;
-    border: 1px solid black;
-    text-decoration: none;
-    color: black;
-    padding: 10px 30px 10px 30px;
 }
 
 #favorites {
