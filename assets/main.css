@@ -102,7 +102,7 @@ a#heart {
 
 #favorites {
     flex-grow: 1;
-    overflow: hidden;
+    overflow: auto;
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -110,7 +110,7 @@ a#heart {
 
 #favorites-container {
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -120,25 +120,30 @@ a#heart {
 }
 
 .favorite-dog {
-    max-height: 180px;
-    max-width: 60%;
     position: relative;
 }
 
 .favorite-dog img {
-    max-height: 150px;
+    max-height: 250px;
     border-radius: 5px;
     margin: 5px;
 }
 
 .favorite-dog:hover button {
     display: block;
+    padding: 5px 20px 5px 20px;
 }
 
 .favorite-dog button {
     display: none;
     position: absolute;
-    bottom: 10px;
+    bottom: 15px;
     left: 10px;
-    z-index: 10;
+    background-color: #0e0e0e;
+    border: 1px solid rgb(0, 198, 230);
+    color: rgb(0, 198, 230);
+}
+
+.favorite-dog button:hover {
+    background-color: gray;
 }

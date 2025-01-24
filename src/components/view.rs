@@ -1,4 +1,3 @@
-use crate::Route;
 use dioxus::prelude::*;
 use rand::seq::SliceRandom;
 
@@ -36,7 +35,7 @@ pub fn DogView() -> Element {
                     // Get a new image
                     img_src.restart();
                     // Save image 
-                    crate::backend::save_img(current).await;
+                    crate::backend::save_img(current).await.unwrap();
                 }, 
                 "Save!"
             }

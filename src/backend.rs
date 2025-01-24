@@ -6,9 +6,10 @@ thread_local! {
         let conn = rusqlite::Connection::open("img.db").expect("Failed to open database");
 
         conn.execute_batch(
-            "CREATE TABLE IF NOT EXISTS dogs (
+            "CREATE TABLE IF NOT EXISTS favorites (
                 id INTEGER PRIMARY KEY,
-                url TEXT NOT NULL
+                url TEXT NOT NULL,
+                UNIQUE(url)
             );",
         ).unwrap();
         
@@ -18,14 +19,14 @@ thread_local! {
 
 #[server]
 pub async fn save_img(image: String) -> Result<(), ServerFnError> {
-    DB.with(|f| f.execute("INSERT INTO dogs (url) VALUES (?1)", &[&image]))?;
+    DB.with(|f| f.execute("INSERT OR IGNORE INTO favorites (url) VALUES (?1)", &[&image]))?;
     Ok(())
 }
 
 #[server]
 pub async fn list_favorites() -> Result<Vec<(usize, String)>, ServerFnError> {
-    let dogs = DB.with(|f| {
-        f.prepare("SELECT id, url FROM dogs ORDER BY id DESC LIMIT 10")
+    let favorites = DB.with(|f| {
+        f.prepare("SELECT id, url FROM favorites ORDER BY id DESC")
             .unwrap()
             .query_map([], |row| Ok((row.get(0)?, row.get(1)?)))
             .unwrap()
@@ -33,5 +34,17 @@ pub async fn list_favorites() -> Result<Vec<(usize, String)>, ServerFnError> {
             .collect()
     });
 
-    Ok(dogs)
+    Ok(favorites)
+}
+
+#[server]
+pub async fn remove_favorite(id: usize) -> Result<(), ServerFnError> {
+    DB.with(|f| f.execute("DELETE FROM favorites WHERE id = (?1)", &[&id]))?;
+    Ok(())
+}
+
+#[server]
+pub async fn remove_all() -> Result<(), ServerFnError> {
+    DB.with(|f| f.execute("DELETE FROM favorites WHERE id = (?1)", &[&1]))?;
+    Ok(())
 }
