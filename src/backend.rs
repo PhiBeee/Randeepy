@@ -6,15 +6,44 @@ thread_local! {
         let conn = rusqlite::Connection::open("img.db").expect("Failed to open database");
 
         conn.execute_batch(
-            "CREATE TABLE IF NOT EXISTS favorites (
+            "
+            BEGIN;
+            CREATE TABLE IF NOT EXISTS favorites (
                 id INTEGER PRIMARY KEY,
                 url TEXT NOT NULL,
                 UNIQUE(url)
-            );",
+            );
+            CREATE TABLE IF NOT EXISTS albums (
+                name TEXT PRIMARY KEY,
+                url TEXT NOT NULL,
+                UNIQUE(url)
+            );
+            INSERT OR IGNORE INTO albums (name, url) VALUES('Doggirls', 'k4ad54');
+            COMMIT;",
         ).unwrap();
         
         conn
     }
+}
+
+#[server]
+pub async fn list_albums()-> Result<Vec<(String, String)>, ServerFnError> {
+    let albums = DB.with(|f| {
+        f.prepare("SELECT name, url FROM albums ORDER BY name DESC")
+        .unwrap()
+        .query_map([], |row| Ok((row.get(0)?, row.get(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect()
+    });
+
+    Ok(albums)
+}
+
+#[server]
+pub async fn get_album(name: String) -> Result<String, ServerFnError> {
+    let album_url = DB.with(|f| f.execute("SELECT url FROM albums WHERE name = (?1)", &[&name]))?;
+    Ok(album_url.to_string())
 }
 
 #[server]
@@ -43,6 +72,7 @@ pub async fn remove_favorite(id: usize) -> Result<(), ServerFnError> {
     Ok(())
 }
 
+// TODO: make this actually delete the whole thing
 #[server]
 pub async fn remove_all() -> Result<(), ServerFnError> {
     DB.with(|f| f.execute("DELETE FROM favorites WHERE id = (?1)", &[&1]))?;

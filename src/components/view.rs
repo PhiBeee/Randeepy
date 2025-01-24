@@ -9,8 +9,13 @@ pub fn DogView() -> Element {
     // Change this to whatever album you want to fetch images from
     let album_identifier = "k4ad54";
 
+    let mut dropdown_album_identifier = use_signal(|| "k4ad54".to_string());
+    let buh = dropdown_album_identifier.clone();
+    //let mut albums = use_resource(crate::backend::list_albums);
+    //let albums_signal = albums.suspend()?;
+
     let mut img_src = use_resource(move || async move {
-        let get_request = format!("https://eepy.ca/api/album/{album_identifier}/view");
+        let get_request = format!("https://eepy.ca/api/album/{buh}/view");
         let response = reqwest::get(get_request)
             .await  
             .unwrap()
@@ -22,6 +27,7 @@ pub fn DogView() -> Element {
         image.url.to_string()
     });
 
+    
     rsx! {
         div { id: "dogview",
             img { src: img_src.cloned().unwrap_or_default() } 
@@ -38,6 +44,24 @@ pub fn DogView() -> Element {
                     crate::backend::save_img(current).await.unwrap();
                 }, 
                 "Save!"
+            }
+            select {  
+                value: dropdown_album_identifier,
+                onchange: move |evt| {
+                    dropdown_album_identifier.set(evt.value());
+                    img_src.restart();
+                },
+                    option {  
+                        value: "k4ad54",
+                        label: "Dog Posting",
+                        onchange: move |_evt| {}
+                    },
+                    option {  
+                        value: "yw792h",
+                        label: "Funny",
+                        onchange: move |_evt| {}
+                    }
+
             }
         }
     }

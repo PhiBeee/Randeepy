@@ -79,14 +79,24 @@ a#heart {
     padding-bottom: 20px;
 }
 
-#skip { background-color: rgb(0, 0, 0) }
-#save { background-color: rgb(0, 0, 0); }
+#buttons select{
+    background-color: black;
+    color: rgb(0, 198, 230);
+    border: 1px solid rgb(0, 198, 230);
+    box-shadow: 0px 0px 5px 1px rgb(0, 198, 230);
+    font-size: 2rem;
+    padding: 10px;
+    font-weight: bold;
+}
 
 #skip, #save {
+    background-color: black;
     padding: 5px 30px 5px 30px;
     border-radius: 3px;
     font-size: 2rem;
     font-weight: bold;
+    border: 1px solid rgb(0, 198, 230);
+    box-shadow: 0px 0px 5px 1px rgb(0, 198, 230);
     color: rgb(0, 198, 230)
 }
 
