@@ -1,17 +1,19 @@
-# Development
+# Randeepy (Placeholder name)
 
-Your new bare-bones project includes minimal organization with a single `main.rs` file and a few assets.
+Simple website to randomly go through images in public chibisafe albums  
+(This one is currently limited to albums hosted on eepy.ca)  
 
-### Serving Your App
+# Functionality
 
-Run the following command in the root of your project to start developing with the default platform:
+- Save images into a favorites list to find them again later (and download later on)  
+- Add your own custom public album to the list  
+- Select which album you want images from
 
-```bash
+# Serving
+
+Currently this can be ran locally by running  
+```
 dx serve
-```
-
-To run for a different platform, use the `--platform platform` flag. E.g.
-```bash
-dx serve --platform desktop
-```
+```  
+in the main directory, which will serve the website to `localhost:8080` or basically `127.0.0.1:8080` in your browser.
 
