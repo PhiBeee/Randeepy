@@ -1,21 +1,25 @@
 use dioxus::prelude::*;
 use rand::seq::SliceRandom;
 
-
+static ALBUM: GlobalSignal<String> = Global::new(|| "k4ad54".to_string());
 
 #[component]
 pub fn DogView() -> Element {
 
-    // Change this to whatever album you want to fetch images from
-    let album_identifier = "k4ad54";
+    let mut albums = use_signal(|| vec![("Dog Posting".to_string(),"k4ad54".to_string())]);
 
-    let mut dropdown_album_identifier = use_signal(|| "k4ad54".to_string());
-    let buh = dropdown_album_identifier.clone();
-    //let mut albums = use_resource(crate::backend::list_albums);
-    //let albums_signal = albums.suspend()?;
+    let get_album_list = move |_| async move {
+        let buh = crate::backend::list_albums()
+            .await 
+            .unwrap();
+
+        albums.set(buh);
+    };
+
+
 
     let mut img_src = use_resource(move || async move {
-        let get_request = format!("https://eepy.ca/api/album/{buh}/view");
+        let get_request = format!("https://eepy.ca/api/album/{ALBUM}/view");
         let response = reqwest::get(get_request)
             .await  
             .unwrap()
@@ -26,7 +30,6 @@ pub fn DogView() -> Element {
         let image = &response.album.files.choose(&mut rand::thread_rng()).unwrap();
         image.url.to_string()
     });
-
     
     rsx! {
         div { id: "dogview",
@@ -45,23 +48,20 @@ pub fn DogView() -> Element {
                 }, 
                 "Save!"
             }
+            // button { onclick: get_album_list, "Get Albums!"}
             select {  
-                value: dropdown_album_identifier,
+                onmounted: get_album_list,
                 onchange: move |evt| {
-                    dropdown_album_identifier.set(evt.value());
+                    *ALBUM.write() = evt.value();
                     img_src.restart();
                 },
+                for (name, url) in albums.cloned() {
                     option {  
-                        value: "k4ad54",
-                        label: "Dog Posting",
-                        onchange: move |_evt| {}
-                    },
-                    option {  
-                        value: "yw792h",
-                        label: "Funny",
-                        onchange: move |_evt| {}
+                        value: url,
+                        label: name,
+                        onchange: move |_| {}
                     }
-
+                }
             }
         }
     }
@@ -69,27 +69,17 @@ pub fn DogView() -> Element {
 
 #[derive(serde::Deserialize)]
 struct EepyAPI {
-    message: String,
     album: EepyAlbum
 }
 
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct EepyAlbum{
-    name: String,
-    description: Option<String>,
-    is_nsfw: bool,
-    count: i32,
     files: Vec<EepyFile>,
-    cover: String
 }
 
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct EepyFile {
-    name: String,
     url: String,
-    thumb: String,
-    preview: String,
-    uuid: String
 }

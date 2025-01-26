@@ -53,6 +53,12 @@ pub async fn save_img(image: String) -> Result<(), ServerFnError> {
 }
 
 #[server]
+pub async fn add_albums(name: String, url: String) -> Result<(), ServerFnError> {
+    DB.with(|f| f.execute("INSERT OR IGNORE INTO albums VALUES (?1, ?2)", rusqlite::params![name, url]))?;
+    Ok(())
+}
+
+#[server]
 pub async fn list_favorites() -> Result<Vec<(usize, String)>, ServerFnError> {
     let favorites = DB.with(|f| {
         f.prepare("SELECT id, url FROM favorites ORDER BY id DESC")

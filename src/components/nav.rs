@@ -5,6 +5,7 @@ use dioxus::prelude::*;
 pub fn NavBar() -> Element {
     rsx! {
         div { id: "title",
+            Link {to: Route::Albums, id: "heart", "➕"}
             Link {to: Route::DogView,
                 h1 {"Puppygirls and Dogwomen! ૮ ˶′ﻌ ‵˶ ა"}
             }

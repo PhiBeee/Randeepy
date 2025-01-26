@@ -28,4 +28,7 @@ enum Route {
 
     #[route("/favorites")]
     Favorites,
+
+    #[route("/add_albums")]
+    Albums,
 }
