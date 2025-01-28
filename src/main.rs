@@ -6,6 +6,7 @@ use components::*;
 mod backend;
 
 static CSS: Asset = asset!("/assets/main.css");
+static FAVICON: Asset = asset!("/assets/favicon.ico");
 
 fn main() {
     dioxus::launch(App);
@@ -15,6 +16,7 @@ fn main() {
 fn App() -> Element {
     rsx! {
         document::Stylesheet{href: CSS}
+        document::Link { rel: "icon", href: FAVICON }
         
         Router::<Route> {}
     }

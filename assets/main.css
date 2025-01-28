@@ -36,6 +36,17 @@ html, body {
     box-shadow: 0px 0px 5px 1px rgb(216, 216, 216, 0.5);
 }
 
+#dogview button{
+    background-color: black;
+    padding: 5px 15px 5px 15px;
+    border-radius: 3px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    border: 1px solid rgb(0, 198, 230);
+    box-shadow: 0px 0px 5px 1px rgb(0, 198, 230);
+}
+
 #labels{
     display: flex;
     flex-direction: row;
@@ -96,12 +107,12 @@ a#heart {
     justify-content: center;
     gap: 20px;
     /* padding-top: 20px; */
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */
 }
 
 #buttons select{
     background-color: black;
-    color: rgb(0, 198, 230);
+    color: white;
     border: 1px solid rgb(0, 198, 230);
     box-shadow: 0px 0px 5px 1px rgb(0, 198, 230);
     font-size: 2rem;
@@ -118,7 +129,7 @@ a#heart {
     font-weight: bold;
     border: 1px solid rgb(0, 198, 230);
     box-shadow: 0px 0px 5px 1px rgb(0, 198, 230);
-    color: rgb(0, 198, 230)
+    color: white;
 }
 
 #navbar {
@@ -172,6 +183,21 @@ a#heart {
     background-color: #0e0e0e;
     border: 1px solid rgb(0, 198, 230);
     color: rgb(0, 198, 230);
+}
+
+.favorite-dog a{
+    display: none;
+    position: absolute;
+    bottom: 15px;
+    right: 5%;
+    background-color: #0e0e0e;
+    border: 1px solid rgb(0, 198, 230);
+    color: rgb(0, 198, 230);
+    padding: 3px 7px 4px 7px;
+}
+
+.favorite-dog:hover a{
+    display: block;
 }
 
 .favorite-dog button:hover {

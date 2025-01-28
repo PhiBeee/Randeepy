@@ -3,10 +3,12 @@ use dioxus::prelude::*;
 #[component]
 pub fn Albums() -> Element{
     let mut albums = use_resource(crate::backend::list_albums);
-    let _albums_signal = albums.suspend()?;
+    let albums_signal = albums.suspend()?;
 
     let mut new_album_name = use_signal(|| "".to_string());
     let mut new_album_url = use_signal(|| "".to_string());
+
+    let mut selected_album = use_signal(|| "".to_string());
 
     let add_album = move |_| async move {
         let url_valid = check_url(new_album_url).await;
@@ -35,6 +37,26 @@ pub fn Albums() -> Element{
                     onclick: add_album,
                     "Add album"
                 }
+                select {  
+                    onchange: move |evt| {
+                        selected_album.set(evt.value());
+                    },
+                    for (name, url) in albums_signal().unwrap() {
+                        option {  
+                            value: url,
+                            label: name,
+                            onchange: move |_| {}
+                        }
+                    }
+                }
+                button {  
+                    onclick: move |_| async move {
+                        crate::backend::rm_albums(selected_album.to_string()).await.unwrap();
+                        albums.restart();
+                    },
+                    "Remove album"
+                }
+                
             }
         }
     }

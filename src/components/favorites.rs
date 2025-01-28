@@ -6,6 +6,15 @@ pub fn Favorites() -> Element {
     let favorites_signal = favorites.suspend()?;
     rsx! {
         div { id: "favorites",
+            div { id: "buttons",
+                button {  id: "save",
+                    onclick: move |_| async move {
+                        crate::backend::remove_all().await.unwrap();
+                        favorites.restart();
+                    },
+                    "DELETE ALL FAVORITES"
+                }
+            }
             div { id: "favorites-container",
                 for (id, url) in favorites_signal().unwrap(){
                     div {
@@ -17,6 +26,12 @@ pub fn Favorites() -> Element {
                             favorites.restart();
                             },
                         "🗑️"
+                        }
+                        a {
+                            class: "favorite-dog",
+                            href: "{url}",
+                            download: "",
+                            "⬇️" 
                         }
                     }
                 }

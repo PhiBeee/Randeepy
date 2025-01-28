@@ -73,13 +73,11 @@ struct EepyAPI {
 }
 
 #[derive(serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
 struct EepyAlbum{
     files: Vec<EepyFile>,
 }
 
 #[derive(serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
 struct EepyFile {
     url: String,
 }

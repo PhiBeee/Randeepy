@@ -59,6 +59,12 @@ pub async fn add_albums(name: String, url: String) -> Result<(), ServerFnError> 
 }
 
 #[server]
+pub async fn rm_albums(url: String) -> Result<(), ServerFnError> {
+    DB.with(|f| f.execute("DELETE FROM albums WHERE url = ?1", rusqlite::params![url]))?;
+    Ok(())
+}
+
+#[server]
 pub async fn list_favorites() -> Result<Vec<(usize, String)>, ServerFnError> {
     let favorites = DB.with(|f| {
         f.prepare("SELECT id, url FROM favorites ORDER BY id DESC")
@@ -78,9 +84,8 @@ pub async fn remove_favorite(id: usize) -> Result<(), ServerFnError> {
     Ok(())
 }
 
-// TODO: make this actually delete the whole thing
 #[server]
 pub async fn remove_all() -> Result<(), ServerFnError> {
-    DB.with(|f| f.execute("DELETE FROM favorites WHERE id = (?1)", &[&1]))?;
+    DB.with(|f| f.execute_batch("DELETE FROM favorites"))?;
     Ok(())
 }
