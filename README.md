@@ -1,4 +1,4 @@
-# Randeepy (Placeholder name)
+# Randeepy 
 
 Simple website to randomly go through images in public chibisafe albums  
 (This one is currently limited to albums hosted on eepy.ca)  
