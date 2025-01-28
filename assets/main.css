@@ -110,7 +110,7 @@ a#heart {
     /* padding-bottom: 20px; */
 }
 
-#buttons select{
+#buttons select, option{
     background-color: black;
     color: white;
     border: 1px solid rgb(0, 198, 230);
